@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Slider } from '@mantine/core';
 import produce from 'immer'
 
-const gridSize = 20;
+const numRows = 40
+const numCols = 63
 
 const operations = [
     [0,1],
@@ -13,33 +14,17 @@ const operations = [
     [-1,-1],
     [1,0],
     [-1,0],
-];
+]
 
-function App() {
-
-    let width;
-    let height;
-    let numRows;
-    let numCols;
-
-    if (document.readyState === 'complete') {
-        let gc = document.querySelector('.gridcontainer');
-        width = gc.offsetWidth
-        height = gc.offsetHeight
-
-        let useableCols = (width / gridSize);
-        let useableRows = (height / gridSize);
-        numRows = Math.round(useableRows);
-        numCols = Math.round(useableCols);
+const clearGrid = () => {
+    const rows = [];
+    for (let i = 0; i < numRows; i++) {
+        rows.push(Array.from(Array(numCols), () => 0))
     }
+    return rows
+}
 
-    const clearGrid = () => {
-        const rows = [];
-        for (let i = 0; i < numRows; i++) {
-            rows.push(Array.from(Array(numCols), () => 0))
-        }
-        return rows
-    }
+const App = () => {
 
     const [value, setValue] = useState(50);
 
@@ -93,12 +78,9 @@ function App() {
         })
 
         setTimeout(runSimulation, 100)
-    },[numCols, numRows])
+    },[])
 
-    useEffect(() => {
-        console.log("numCols: ", numCols)
-        console.log("numRows: ", numRows)
-    }, [numCols,numRows])
+
     return (
         <div className="w-screen h-screen flex flex-col bg-gray-900">
             <div className="h-16 px-11 flex justify-end items-center bg-gray-800">
@@ -112,7 +94,7 @@ function App() {
                     className="w-full h-full bg-gray-800 rounded gridcontainer"
                     style={{display: "grid",gridTemplateColumns: `repeat(${numCols}, 20px)`}}
                 >
-                    {grid.map((rows, i) => rows.map((col, k) =>
+                    {grid && grid.map((rows, i) => rows.map((col, k) =>
                         <div
                             key={`${i}-${k}`}
                             onClick={() => {
