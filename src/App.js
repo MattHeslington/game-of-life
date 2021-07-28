@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Slider } from '@mantine/core';
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Slider } from '@mantine/core'
+import { Helmet } from 'react-helmet'
 import produce from 'immer'
 
 const gridSize = 20;
@@ -100,6 +101,12 @@ function App() {
         console.log("numRows: ", numRows)
     }, [numCols,numRows])
     return (
+        <>
+        <Helmet>
+            <meta charSet="utf-8" />
+            <title>My Title</title>
+            <link rel="canonical" href="http://mysite.com/example" />
+        </Helmet>
         <div className="flex flex-col w-screen h-screen bg-white">
             <div className="flex items-center justify-end h-16 bg-white px-11">
                 <div className="flex items-center justify-center text-sm font-bold tracking-tight text-right text-black uppercase w-72">george conway's game of life</div>
@@ -137,7 +144,7 @@ function App() {
                             }
                         }}
                         className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded">
-                            {running ? 'stop' : 'start'}
+                            {running ? 'stop' : 'evolve'}
                     </button>
                     <button
                         onClick={randomiseGrid}
@@ -168,6 +175,7 @@ function App() {
                 </div>
             </main>
         </div>
+        </>
     );
 }
 
