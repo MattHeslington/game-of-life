@@ -100,16 +100,13 @@ function App() {
         console.log("numRows: ", numRows)
     }, [numCols,numRows])
     return (
-        <div className="w-screen h-screen flex flex-col bg-gray-900">
-            <div className="h-16 px-11 flex justify-end items-center bg-gray-800">
-                <div className="flex flex-col">
-                    <div className="text-white tracking-tight font-bold text-sm uppercase text-right">george conway's</div>
-                    <div className="text-white tracking-tight font-bold text-sm uppercase text-right">game of life</div>
-                </div>
+        <div className="flex flex-col w-screen h-screen bg-white">
+            <div className="flex items-center justify-end h-16 bg-white px-11">
+                <div className="flex items-center justify-center text-sm font-bold tracking-tight text-right text-black uppercase w-72">george conway's game of life</div>
             </div>
-            <main className="p-11 h-full w-full flex flex-row">
+            <main className="flex flex-row w-full h-full p-11">
                 <div
-                    className="w-full h-full bg-gray-800 rounded gridcontainer"
+                    className="w-full h-full bg-gray-100 rounded gridcontainer"
                     style={{display: "grid",gridTemplateColumns: `repeat(${numCols}, 20px)`}}
                 >
                     {grid.map((rows, i) => rows.map((col, k) =>
@@ -121,13 +118,17 @@ function App() {
                                 })
                                 setGrid(newGrid)
                             }}
-                            className={`w-5 h-5 border border-black ${grid[i][k] ? 'bg-pink-400' : undefined}`}/>
+                            className={`w-5 h-5 border border-gray-300 ${grid[i][k] ? 'bg-black' : undefined}`}/>
                     ))}
                 </div>
-                <div className="w-72 flex flex-col h-full space-y-12 items-center ml-11">
-                    <p className="text-center font-light text-sm text-gray-400">
-                        The Game of Life is a cellular automaton devised by Dr John Conway in 1970. The game is a zero-player game, meaning that its evolution is determined by its initial state. One interacts with the Game of Life by creating an initial configuration and observing how it evolves.
-                    </p>
+                <div className="flex flex-col items-center h-full space-y-12 w-72 ml-11">
+                    <div>
+                        <h3 className="text-sm text-center text-gray-700 uppercase">rules (how things evolve)</h3>
+                        <ul className="flex flex-col mt-4 space-y-4">
+                            <li className="text-sm font-light text-center text-gray-600">Any live cell with fewer than two or more than three live neighbours dies</li>
+                            <li className="text-sm font-light text-center text-gray-600">Any dead cell with exactly three live neighbours becomes a live cell</li>
+                        </ul>
+                    </div>
                     <button
                         onClick={() => {setRunning(!running)
                             if (!running) {
@@ -135,31 +136,35 @@ function App() {
                                 runSimulation();
                             }
                         }}
-                        className="h-12 w-48 flex items-center justify-center rounded bg-blue-600 text-white font-medium">
+                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded">
                             {running ? 'stop' : 'start'}
                     </button>
                     <button
                         onClick={randomiseGrid}
-                        className="h-12 w-48 flex items-center justify-center rounded bg-blue-600 text-white font-medium">
+                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded">
                             randomise
                     </button>
                     <button
                         onClick={() => {setGrid(clearGrid())}}
-                        className="h-12 w-48 flex items-center justify-center rounded bg-blue-600 text-white font-medium">
+                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded">
                             clear
                     </button>
                     <div className="w-72">
-                        <div className="text-sm text-center uppercase font-light text-gray-400 mb-10">set interval</div>
+                        <div className="mb-10 text-sm font-light text-center text-gray-600 uppercase">set interval</div>
                         <Slider
                             min={1}
                             max={100}
                             step={1}
+                            color="gray"
                             defaultValue={50}
                             labelAlwaysOn
                             value={value}
                             onChange={setValue}
                         />
                     </div>
+                    <p className="text-sm font-light text-center text-gray-600">
+                        The Game of Life is a cellular automaton devised by Dr John Conway in 1970. The game is a zero-player game, meaning that its evolution is determined by its initial state. One interacts with the Game of Life by creating an initial configuration and observing how it evolves.
+                    </p>
                 </div>
             </main>
         </div>
