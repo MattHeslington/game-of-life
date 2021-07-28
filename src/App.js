@@ -43,6 +43,8 @@ function App() {
     }
 
     const [value, setValue] = useState(50);
+    const valueRef = useRef(value);
+    valueRef.current=(value*10);
 
     const [grid, setGrid] = useState(() => {
         return clearGrid()
@@ -93,7 +95,7 @@ function App() {
             })
         })
 
-        setTimeout(runSimulation, 100)
+        setTimeout(runSimulation, valueRef.current)
     },[numCols, numRows])
 
     useEffect(() => {
@@ -104,7 +106,7 @@ function App() {
         <>
         <Helmet>
             <meta charSet="utf-8" />
-            <title>My Title</title>
+            <title>Game of Life by George Conway</title>
             <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
         <div className="flex flex-col w-screen h-screen bg-white">
