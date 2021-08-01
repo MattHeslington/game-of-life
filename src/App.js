@@ -25,22 +25,17 @@ function App() {
     let numRows;
     let numCols;
 
-    // REF 1
-    if (document.readyState === 'complete') {
-        let getGridSize = document.querySelector('.gridcontainer');
-        width = getGridSize.offsetWidth
-        height = getGridSize.offsetHeight
+    const [grid, setGrid] = useState();
+    const gridcontainer = useRef(null);
 
-        let useableCols = (width / gridSize);
-        let useableRows = (height / gridSize);
-        numRows = Math.round(useableRows);
-        numCols = Math.round(useableCols);
-    }
+    width = gridcontainer.current?.offsetWidth // consider that might be undefined
+    height = gridcontainer.current?.offsetHeight
 
-    if (document.readyState === 'complete') {
-        console.log("numRows: ",numRows);
-        console.log("numCols: ",numCols);
-    }
+    let useableCols = (width / gridSize);
+    let useableRows = (height / gridSize);
+    numRows = Math.round(useableRows);
+    numCols = Math.round(useableCols);
+
 
     const clearGrid = () => {
         console.log("clearGrid called");
@@ -50,12 +45,6 @@ function App() {
         }
         return rows
     }
-
-    // REF 2
-    const [grid, setGrid] = useState(() => {
-        console.log("init grid state");
-        return clearGrid()
-    })
 
     const [interval, setInterval] = useState(50);
     const intervalRef = useRef(interval);
@@ -113,6 +102,13 @@ function App() {
         console.log("grid: ",grid)
     },[grid])
 
+    useEffect(() => {
+        if(gridcontainer.current){
+            // gridcontainer is loaded
+            setGrid(clearGrid())
+        }
+    }, [gridcontainer.current])
+
     return (
         <>
         <Helmet>
@@ -126,10 +122,11 @@ function App() {
             </div>
             <main className="flex flex-row w-full h-full p-11">
                 <div
+                    ref={gridcontainer}
                     className="w-full h-full bg-gray-100 rounded gridcontainer"
                     style={{display: "grid",gridTemplateColumns: `repeat(${numCols}, 20px)`}}
                 >
-                    {grid.map((rows, i) => rows.map((col, k) =>
+                    {grid && grid.map((rows, i) => rows.map((col, k) =>
                         <div
                             key={`${i}-${k}`}
                             onClick={() => {
