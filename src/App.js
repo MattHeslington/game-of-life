@@ -3,8 +3,10 @@ import { Slider } from '@mantine/core'
 import { Helmet } from 'react-helmet'
 import produce from 'immer'
 
+//SIZE OF GRID CELL
 const gridSize = 20;
 
+//ARRAY TO CHECK FOR NEIGHBOURS
 const operations = [
     [0,1],
     [0,-1],
@@ -23,10 +25,11 @@ function App() {
     let numRows;
     let numCols;
 
+    // REF 1
     if (document.readyState === 'complete') {
-        let gc = document.querySelector('.gridcontainer');
-        width = gc.offsetWidth
-        height = gc.offsetHeight
+        let getGridSize = document.querySelector('.gridcontainer');
+        width = getGridSize.offsetWidth
+        height = getGridSize.offsetHeight
 
         let useableCols = (width / gridSize);
         let useableRows = (height / gridSize);
@@ -34,7 +37,13 @@ function App() {
         numCols = Math.round(useableCols);
     }
 
+    if (document.readyState === 'complete') {
+        console.log("numRows: ",numRows);
+        console.log("numCols: ",numCols);
+    }
+
     const clearGrid = () => {
+        console.log("clearGrid called");
         const rows = [];
         for (let i = 0; i < numRows; i++) {
             rows.push(Array.from(Array(numCols), () => 0))
@@ -42,13 +51,15 @@ function App() {
         return rows
     }
 
-    const [value, setValue] = useState(50);
-    const valueRef = useRef(value);
-    valueRef.current=(value*10);
-
+    // REF 2
     const [grid, setGrid] = useState(() => {
+        console.log("init grid state");
         return clearGrid()
     })
+
+    const [interval, setInterval] = useState(50);
+    const intervalRef = useRef(interval);
+    intervalRef.current=(interval*10);
 
     const [running, setRunning] = useState(false)
 
@@ -58,7 +69,7 @@ function App() {
     const randomiseGrid = () => {
         const rows = [];
         for (let i = 0; i < numRows; i++) {
-            rows.push(Array.from(Array(numCols), () => Math.random() > 0.7 ? 1 : 0))
+            rows.push(Array.from(Array(numCols), () => Math.random() > 0.9 ? 1 : 0))
         }
         setGrid(rows);
     }
@@ -95,13 +106,13 @@ function App() {
             })
         })
 
-        setTimeout(runSimulation, valueRef.current)
+        setTimeout(runSimulation, intervalRef.current)
     },[numCols, numRows])
 
     useEffect(() => {
-        console.log("numCols: ", numCols)
-        console.log("numRows: ", numRows)
-    }, [numCols,numRows])
+        console.log("grid: ",grid)
+    },[grid])
+
     return (
         <>
         <Helmet>
@@ -145,17 +156,17 @@ function App() {
                                 runSimulation();
                             }
                         }}
-                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded">
+                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded focus:outline-none">
                             {running ? 'stop' : 'evolve'}
                     </button>
                     <button
                         onClick={randomiseGrid}
-                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded">
+                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded focus:outline-none">
                             randomise
                     </button>
                     <button
                         onClick={() => {setGrid(clearGrid())}}
-                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded">
+                        className="flex items-center justify-center w-48 h-12 font-medium text-white bg-gray-500 rounded focus:outline-none">
                             clear
                     </button>
                     <div className="w-72">
@@ -167,8 +178,8 @@ function App() {
                             color="gray"
                             defaultValue={50}
                             labelAlwaysOn
-                            value={value}
-                            onChange={setValue}
+                            value={interval}
+                            onChange={setInterval}
                         />
                     </div>
                     <p className="text-sm font-light text-center text-gray-600">
